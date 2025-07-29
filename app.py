@@ -31,7 +31,7 @@ elif page == "Page 2: Merge Data":
      st.warning("You've uploaded a macro-enabled Excel file (.xlsm). Ensure it comes from a trusted source.")
     ns2_cloud_file = st.file_uploader("Upload NS2 Cloud Material Code", type=["xlsx"])
 
-    # 👇 Let user enter the Software Stack sheet name (default value included)
+    # Let user enter the Software Stack sheet name (default value included)
     stack_sheet_name = st.text_input(
         "Enter the sheet name for the Software Stack file:",
         value="SW Stack 25-02 Current"
