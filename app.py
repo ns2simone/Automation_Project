@@ -26,14 +26,25 @@ elif page == "Page 2: Merge Data":
     st.title("Combine Software Stack, CAE, and NS2 Material Code")
 
     stack_file = st.file_uploader("Upload Software Stack File", type=["xlsx"])
-    cae_file = st.file_uploader("Upload CAE File", type=["xlsx"])
+    cae_file = st.file_uploader("Upload CAE Unofficial PAM File", type=["xlsx", "xlsm"])
+    if cae_file and cae_file.name.endswith(".xlsm"):
+     st.warning("You've uploaded a macro-enabled Excel file (.xlsm). Ensure it comes from a trusted source.")
     ns2_cloud_file = st.file_uploader("Upload NS2 Cloud Material Code", type=["xlsx"])
 
-    if stack_file and cae_file and ns2_cloud_file:
-        merged_df = merge_spreadsheets(stack_file, cae_file, ns2_cloud_file)
-        st.success("Merge complete!")
-        st.dataframe(merged_df)
+    # 👇 Let user enter the Software Stack sheet name (default value included)
+    stack_sheet_name = st.text_input(
+        "Enter the sheet name for the Software Stack file:",
+        value="SW Stack 25-02 Current"
+    )
 
-        st.download_button("Download Merged File",
-                           merged_df.to_csv(index=False),
-                           file_name="merged_data.csv")
+    if stack_file and cae_file and ns2_cloud_file and stack_sheet_name:
+        try:
+            merged_df = merge_spreadsheets(stack_file, cae_file, ns2_cloud_file, stack_sheet_name)
+            st.success("Merge complete!")
+            st.dataframe(merged_df)
+
+            st.download_button("Download Merged File",
+                               merged_df.to_csv(index=False),
+                               file_name="merged_data.csv")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
